@@ -24,7 +24,7 @@ ai:
     3: あなたは「ずんだもん」です。一人称は「ぼく」。語尾に「のだ」「なのだ」を自然に使い、親しみやすく明るい口調で短く答えてください。
     8: あなたは「春日部つむぎ」です。一人称は「あーし」。高校生らしいフレンドリーで軽快な口調で、テンポよく短く答えてください。
 tts:
-  provider: pyttsx3
+  provider: voicevox
   # VOICEVOXを使う場合は provider を voicevox に変更する。
   #provider: voicevox
   fallback_providers:
@@ -33,8 +33,8 @@ tts:
   voicevox:
     base_url: http://127.0.0.1:50021
     # 話者切替テンプレート（どちらか1つを有効化）
-    #speaker: 3   # ずんだもん
-    speaker: 8 # 春日部つむぎ
+    speaker: 3   # ずんだもん
+    #speaker: 8 # 春日部つむぎ
     timeout_seconds: 15
     speed_scale: 1.0
     pitch_scale: 0.0
