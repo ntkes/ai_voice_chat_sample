@@ -20,10 +20,24 @@ def trim_history(history: list[dict[str, str]], max_messages: int) -> list[dict[
     return history[-max_messages:]
 
 
+def build_system_prompt(config: AppConfig) -> str:
+    prompt = config.ai.system_prompt
+    if config.tts.provider != "voicevox":
+        return prompt
+
+    speaker_id = config.tts.voicevox.speaker
+    character_prompt = config.ai.voicevox_character_prompts.get(speaker_id)
+    if not character_prompt:
+        return prompt
+
+    return f"{prompt}\n{character_prompt}"
+
+
 def run_voice_chat(config_path: Path) -> None:
     config: AppConfig = load_config(config_path)
     recognizer = build_recognizer()
     history: list[dict[str, str]] = []
+    system_prompt = build_system_prompt(config)
 
     print("音声チャットを開始します。終了するには設定の終了ワードを話してください。")
 
@@ -71,6 +85,7 @@ def run_voice_chat(config_path: Path) -> None:
                         user_text=user_text,
                         ai_config=config.ai,
                         history=history,
+                        system_prompt=system_prompt,
                     )
                 except Exception as exc:
                     print(f"AI応答の取得に失敗しました: {exc}")
@@ -80,7 +95,7 @@ def run_voice_chat(config_path: Path) -> None:
                 append_line(config.log_file, format_log_line("Assistant", reply))
 
                 try:
-                    speak_text(reply)
+                    speak_text(reply, config.tts)
                 except Exception as exc:
                     print(f"音声出力に失敗しました: {exc}")
 

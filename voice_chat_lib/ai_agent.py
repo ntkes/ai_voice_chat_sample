@@ -11,8 +11,10 @@ def request_chat_reply(
     user_text: str,
     ai_config: AIConfig,
     history: list[dict[str, str]] | None = None,
+    system_prompt: str | None = None,
 ) -> str:
-    messages: list[dict[str, str]] = [{"role": "system", "content": ai_config.system_prompt}]
+    prompt = ai_config.system_prompt if system_prompt is None else system_prompt
+    messages: list[dict[str, str]] = [{"role": "system", "content": prompt}]
     if history:
         messages.extend(history)
     messages.append({"role": "user", "content": user_text})
