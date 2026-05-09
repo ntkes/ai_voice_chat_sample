@@ -2,7 +2,13 @@ log_file: speech_log.txt
 history:
   max_messages: 12
 speech_recognition:
+  # 音声認識エンジン: google(オンライン) / sphinx(完全ローカル)
+  engine: google
   language: ja-JP
+
+  #engine: sphinx
+  #language: en-US # sphinx の標準同梱モデルは en-US。ja-JP を使う場合は別途モデル配置が必要。
+
   ambient_duration: 1.0
   listen_timeout: 8.0
   phrase_time_limit: 10.0

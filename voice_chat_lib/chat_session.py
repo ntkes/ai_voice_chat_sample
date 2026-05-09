@@ -58,6 +58,7 @@ def run_voice_chat(config_path: Path) -> None:
                     user_text = capture_text(
                         recognizer,
                         source,
+                        engine=config.speech_recognition.engine,
                         language=config.speech_recognition.language,
                         timeout=config.speech_recognition.listen_timeout,
                         phrase_time_limit=config.speech_recognition.phrase_time_limit,
@@ -69,7 +70,22 @@ def run_voice_chat(config_path: Path) -> None:
                     print("音声を認識できませんでした。もう一度お願いします。")
                     continue
                 except sr.RequestError as exc:
-                    print(f"音声認識APIでエラー: {exc}")
+                    if (
+                        config.speech_recognition.engine == "sphinx"
+                        and "missing PocketSphinx language data directory" in str(exc)
+                    ):
+                        print(
+                            "音声認識エラー (sphinx): 指定言語モデルが見つかりません。\n"
+                            "sphinx は標準で en-US のみ同梱です。\n"
+                            "すぐ試すには chat_config.yaml の"
+                            " speech_recognition.language を en-US に変更してください。"
+                        )
+                        break
+
+                    print(
+                        "音声認識エラー"
+                        f" ({config.speech_recognition.engine}): {exc}"
+                    )
                     break
 
                 print(f"You: {user_text}")

@@ -13,6 +13,7 @@ class HistoryConfig:
 
 @dataclass(frozen=True)
 class SpeechRecognitionConfig:
+    engine: str
     language: str
     ambient_duration: float
     listen_timeout: float
@@ -91,7 +92,14 @@ def load_config(config_path: Path) -> AppConfig:
     history = HistoryConfig(max_messages=int(raw["history"]["max_messages"]))
 
     speech = raw["speech_recognition"]
+    recognition_engine = str(speech.get("engine", "google")).strip().lower()
+    if recognition_engine not in {"google", "sphinx"}:
+        raise ValueError(
+            "speech_recognition.engine must be one of: google, sphinx"
+        )
+
     speech_config = SpeechRecognitionConfig(
+        engine=recognition_engine,
         language=str(speech["language"]),
         ambient_duration=float(speech["ambient_duration"]),
         listen_timeout=float(speech["listen_timeout"]),

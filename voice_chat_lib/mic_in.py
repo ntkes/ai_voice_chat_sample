@@ -28,12 +28,19 @@ def calibrate_microphone(
 def capture_text(
     recognizer: sr.Recognizer,
     source: sr.AudioSource,
+    engine: str,
     language: str,
     timeout: Optional[float],
     phrase_time_limit: Optional[float],
 ) -> str:
     audio = recognizer.listen(source, timeout=timeout, phrase_time_limit=phrase_time_limit)
-    return recognizer.recognize_google(audio, language=language).strip()
+
+    if engine == "google":
+        return recognizer.recognize_google(audio, language=language).strip()
+    if engine == "sphinx":
+        return recognizer.recognize_sphinx(audio, language=language).strip()
+
+    raise ValueError(f"Unsupported speech recognition engine: {engine}")
 
 
 def format_log_line(speaker: str, text: str) -> str:
