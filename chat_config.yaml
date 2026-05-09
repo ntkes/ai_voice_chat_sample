@@ -1,0 +1,22 @@
+log_file: speech_log.txt
+history:
+  max_messages: 12
+speech_recognition:
+  language: ja-JP
+  ambient_duration: 1.0
+  listen_timeout: 8.0
+  phrase_time_limit: 10.0
+  exit_phrases:
+    - stop
+    - stop recording
+    - exit
+    - quit
+    - 終了
+    - 会話終了
+    - ストップ
+ai:
+  api_url: http://127.0.0.1:1234/v1/chat/completions
+  model_name: local-model
+  temperature: 0.3
+  timeout_seconds: 30
+  system_prompt: あなたは簡潔に短く会話するアシスタントです。返答は1文で短くしてください。
